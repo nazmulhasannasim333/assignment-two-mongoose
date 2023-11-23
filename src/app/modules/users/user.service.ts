@@ -4,10 +4,6 @@ import { User } from "./user.model";
 // User Related API's
 // create a user to database
 const createUserToDB = async (userData: TUser) => {
-  const userExists = await User.isUserExists(userData.userId);
-  if (userExists) {
-    throw new Error("User already exists!");
-  }
   const result = User.create(userData);
   return result;
 };

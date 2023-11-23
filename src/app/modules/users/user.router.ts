@@ -2,11 +2,21 @@ import express from "express";
 import { userController } from "./user.controller";
 const router = express.Router();
 
+// create user
 router.post("/users", userController.createUser);
+// get all user
 router.get("/users", userController.getAllUser);
+// get single user
 router.get("/users/:userId", userController.getSingleUser);
+// update user
 router.put("/users/:userId", userController.updateUser);
+// insert a order to user collection
 router.put("/users/:userId/orders", userController.insertOrder);
+// get user order
+router.get("/users/:userId/orders", userController.getUserOrder);
+// calculate user order price
+router.get("/users/:userId/orders", userController.calculateUserOrder);
+// delete user
 router.delete("/users/:userId", userController.deleteUser);
 
 export const UserRoutes = router;

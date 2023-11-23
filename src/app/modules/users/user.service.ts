@@ -79,9 +79,19 @@ const insertOrderToUserCollection = async (
 const getAllOrderToUserCollection = async (userId: number | string) => {
   const userExists = await User.isUserExists(userId);
   if (!userExists) {
-    throw new Error("User not found");
+    throw new Error("User not found ");
   }
-  const result = User.findById(userId);
+  const result = User.findOne({ userId }).select("orders");
+  return result;
+};
+
+// calculate a user all orders price
+const calculateAllOrderToUserCollection = async (userId: number | string) => {
+  const userExists = await User.isUserExists(userId);
+  if (!userExists) {
+    throw new Error("User not found ");
+  }
+  const result = User.findOne({ userId }).select("orders");
   return result;
 };
 
@@ -93,4 +103,5 @@ export const UserServices = {
   deleteUserFromDB,
   insertOrderToUserCollection,
   getAllOrderToUserCollection,
+  calculateAllOrderToUserCollection,
 };

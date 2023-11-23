@@ -27,7 +27,8 @@ Start the server
 ```
 
 - Open postman
-  - -Create a user
+
+-Create a user
 
 ```http
   http://localhost:5000/api/users

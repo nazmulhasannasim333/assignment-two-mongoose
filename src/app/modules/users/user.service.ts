@@ -4,6 +4,10 @@ import { User } from "./user.model";
 // User Related API's
 // create a user to database
 const createUserToDB = async (userData: TUser) => {
+  // const userExists = await User.isUserExists(userData.userId);
+  // if (userExists) {
+  //   throw new Error("User already exists!");
+  // }
   const result = User.create(userData);
   return result;
 };
@@ -20,7 +24,7 @@ const getAllUserFromDB = async () => {
 const getSingleUserFromDB = async (userId: number | string) => {
   const userExists = await User.isUserExists(userId);
   if (!userExists) {
-    throw new Error("User not found for this id");
+    throw new Error("User not found");
   }
   const result = User.findOne({ userId });
   return result;
@@ -30,7 +34,7 @@ const getSingleUserFromDB = async (userId: number | string) => {
 const updateUserFromDB = async (userId: number | string, userData: TUser) => {
   const userExists = await User.isUserExists(userId);
   if (!userExists) {
-    throw new Error("User not found for update");
+    throw new Error("User not found");
   }
   const result = User.findOneAndUpdate(
     { userId },
@@ -46,7 +50,7 @@ const updateUserFromDB = async (userId: number | string, userData: TUser) => {
 const deleteUserFromDB = async (userId: number | string) => {
   const userExists = await User.isUserExists(userId);
   if (!userExists) {
-    throw new Error("User not found for delete");
+    throw new Error("User not found");
   }
   const result = User.findOneAndDelete({ userId });
   return result;

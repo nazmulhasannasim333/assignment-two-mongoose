@@ -91,8 +91,15 @@ const calculateAllOrderToUserCollection = async (userId: number | string) => {
   if (!userExists) {
     throw new Error("User not found ");
   }
-  const result = User.findOne({ userId }).select("orders");
-  return result;
+  const result = await User.findOne({ userId }).select("orders");
+
+  const totalPrice = (result?.orders || []).reduce(
+    (total: number, order: { price?: number }) => {
+      return total + (order.price || 0);
+    },
+    0
+  );
+  return totalPrice;
 };
 
 export const UserServices = {

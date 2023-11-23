@@ -172,11 +172,14 @@ const getUserOrder = async (req: Request, res: Response) => {
 const calculateUserOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await UserServices.calculateAllOrderToUserCollection(userId);
+    const totalPrice =
+      await UserServices.calculateAllOrderToUserCollection(userId);
     res.status(200).json({
       success: true,
       message: "Total price calculated successfully!",
-      data: result,
+      data: {
+        totalPrice,
+      },
     });
   } catch (error: any) {
     res.status(500).json({

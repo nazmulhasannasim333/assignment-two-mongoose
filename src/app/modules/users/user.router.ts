@@ -15,7 +15,10 @@ router.put("/users/:userId/orders", userController.insertOrder);
 // get user order
 router.get("/users/:userId/orders", userController.getUserOrder);
 // calculate user order price
-router.get("/users/:userId/orders", userController.calculateUserOrder);
+router.get(
+  "/users/:userId/orders/total-price",
+  userController.calculateUserOrder
+);
 // delete user
 router.delete("/users/:userId", userController.deleteUser);
 

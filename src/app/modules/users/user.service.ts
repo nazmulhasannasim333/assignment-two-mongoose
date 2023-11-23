@@ -67,13 +67,23 @@ const insertOrderToUserCollection = async (
     throw new Error("User not found");
   }
   const { productName, price, quantity } = orderData;
-  const result = User.findOneAndReplace({ userId }, {});
+  const result = User.findOneAndUpdate(
+    { userId, orders: { $exists: true } },
+    { $push: { orders: { productName, price, quantity } } },
+    { upsert: true, new: true }
+  );
   return result;
 };
 
-// { userId, orders: { $exists: true } },
-//     { $push: { orders: { productName, price, quantity } } },
-//     { upsert: true, new: true }
+// get a user all orders
+const getAllOrderToUserCollection = async (userId: number | string) => {
+  const userExists = await User.isUserExists(userId);
+  if (!userExists) {
+    throw new Error("User not found");
+  }
+  const result = User.findById(userId);
+  return result;
+};
 
 export const UserServices = {
   createUserToDB,
@@ -82,4 +92,5 @@ export const UserServices = {
   updateUserFromDB,
   deleteUserFromDB,
   insertOrderToUserCollection,
+  getAllOrderToUserCollection,
 };

@@ -52,11 +52,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// mongoose pre middleware for creating order
-// userSchema.pre("findOneAndUpdate", async function (next) {
-
-// })
-
 // delete password field when response
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
@@ -64,6 +59,7 @@ userSchema.methods.toJSON = function () {
   return obj;
 };
 
+// user exist or not static method
 userSchema.statics.isUserExists = async function (userId: number | string) {
   const existingUser = await User.findOne({ userId });
   return existingUser;

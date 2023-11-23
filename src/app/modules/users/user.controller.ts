@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserServices } from "./user.service";
 import { UserZodSchema } from "./user.validation";
 
+// User Related API's
 // create a user
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -117,10 +118,38 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+// insert a order
+const insertOrder = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const order = req.body;
+    const result = await UserServices.insertOrderToUserCollection(
+      userId,
+      order
+    );
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+        error: error,
+      },
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getAllUser,
   getSingleUser,
   updateUser,
   deleteUser,
+  insertOrder,
 };

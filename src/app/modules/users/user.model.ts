@@ -41,7 +41,7 @@ const userSchema = new Schema<TUser>({
   ],
 });
 
-// mongoose pre middleware
+// mongoose pre middleware for hashing password
 userSchema.pre("save", async function (next) {
   const user = this;
   // hashing password
@@ -51,6 +51,11 @@ userSchema.pre("save", async function (next) {
   );
   next();
 });
+
+// mongoose pre middleware for creating order
+// userSchema.pre("findOneAndUpdate", async function (next) {
+
+// })
 
 // delete password field when response
 userSchema.methods.toJSON = function () {

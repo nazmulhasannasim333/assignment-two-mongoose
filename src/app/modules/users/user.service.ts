@@ -1,7 +1,8 @@
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
-// insert a user to database
+// User Related API's
+// create a user to database
 const createUserToDB = async (userData: TUser) => {
   const result = User.create(userData);
   return result;
@@ -17,11 +18,11 @@ const getAllUserFromDB = async () => {
 
 // get single user from database
 const getSingleUserFromDB = async (userId: number | string) => {
-  const result = User.findOne({ userId });
   const userExists = await User.isUserExists(userId);
   if (!userExists) {
     throw new Error("User not found for this id");
   }
+  const result = User.findOne({ userId });
   return result;
 };
 
@@ -51,10 +52,34 @@ const deleteUserFromDB = async (userId: number | string) => {
   return result;
 };
 
+// Orders Related API's
+// insert a order to specific user collection
+const insertOrderToUserCollection = async (
+  userId: number | string,
+  orderData: {
+    productName: string;
+    price: number;
+    quantity: number;
+  }
+) => {
+  const userExists = await User.isUserExists(userId);
+  if (!userExists) {
+    throw new Error("User not found");
+  }
+  const { productName, price, quantity } = orderData;
+  const result = User.findOneAndReplace({ userId }, {});
+  return result;
+};
+
+// { userId, orders: { $exists: true } },
+//     { $push: { orders: { productName, price, quantity } } },
+//     { upsert: true, new: true }
+
 export const UserServices = {
   createUserToDB,
   getAllUserFromDB,
   getSingleUserFromDB,
   updateUserFromDB,
   deleteUserFromDB,
+  insertOrderToUserCollection,
 };

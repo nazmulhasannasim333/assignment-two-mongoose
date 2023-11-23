@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from "mongoose";
-import { TUser } from "./user.interface";
+import { TUser, UserModel } from "./user.interface";
+import bcrypt from "bcrypt";
+import config from "../../config";
 
 const userSchema = new Schema<TUser>({
   userId: {
@@ -38,4 +41,27 @@ const userSchema = new Schema<TUser>({
   ],
 });
 
-export const User = model<TUser>("user", userSchema);
+// mongoose pre middleware
+userSchema.pre("save", async function (next) {
+  const user = this;
+  // hashing password
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round)
+  );
+  next();
+});
+
+// delete password field when response
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
+
+userSchema.statics.isUserExists = async function (userId: number | string) {
+  const existingUser = await User.findOne({ userId });
+  return existingUser;
+};
+
+export const User = model<TUser, UserModel>("user", userSchema);

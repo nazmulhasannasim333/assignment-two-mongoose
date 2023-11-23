@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import { UserServices } from "./user.service";
+import { UserZodSchema } from "./user.validation";
 
 // create a user
 const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
-    const result = await UserServices.createUserToDB(userData);
+    // zod validation data
+    const zodParseData = UserZodSchema.parse(userData);
+    const result = await UserServices.createUserToDB(zodParseData);
     res.status(200).json({
       success: true,
       message: "User created successfully",
@@ -55,10 +58,10 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: "User fetched successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "User not found",
+      message: error.message || "User not found",
       error: {
         code: 404,
         description: "User not found!",
@@ -78,10 +81,10 @@ const updateUser = async (req: Request, res: Response) => {
       message: "User updated successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "User not found",
+      message: error.message || "User not found",
       error: {
         code: 404,
         description: "User not found!",
@@ -101,10 +104,10 @@ const deleteUser = async (req: Request, res: Response) => {
       message: "User deleted successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "User not found",
+      message: error.message || "User not found",
       error: {
         code: 404,
         description: "User not found!",

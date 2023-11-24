@@ -8,10 +8,6 @@ router.post("/users", userController.createUser);
 router.get("/users", userController.getAllUser);
 // get single user
 router.get("/users/:userId", userController.getSingleUser);
-// update user
-router.put("/users/:userId", userController.updateUser);
-// insert a order to user collection
-router.put("/users/:userId/orders", userController.insertOrder);
 // get user order
 router.get("/users/:userId/orders", userController.getUserOrder);
 // calculate user order price
@@ -19,6 +15,10 @@ router.get(
   "/users/:userId/orders/total-price",
   userController.calculateUserOrder
 );
+// update a user
+router.put("/users/:userId", userController.updateUser);
+// insert a order to user collection
+router.put("/users/:userId/orders", userController.insertOrder);
 // delete user
 router.delete("/users/:userId", userController.deleteUser);
 

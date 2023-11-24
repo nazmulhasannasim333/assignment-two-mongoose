@@ -4,13 +4,13 @@ import { User } from "./user.model";
 // User Related API's
 // create a user to database
 const createUserToDB = async (userData: TUser) => {
-  const result = User.create(userData);
+  const result = await User.create(userData);
   return result;
 };
 
 // get all users from database
 const getAllUserFromDB = async () => {
-  const result = User.find().select(
+  const result = await User.find().select(
     "userId username fullName age email address"
   );
   return result;
@@ -32,12 +32,13 @@ const updateUserFromDB = async (userId: number | string, userData: TUser) => {
   if (!userExists) {
     throw new Error("User not found");
   }
-  const result = User.findOneAndUpdate(
+  const result = await User.findOneAndUpdate(
     { userId },
+    { $set: userData },
     {
-      $set: userData,
-    },
-    { new: true, runValidators: true }
+      new: true,
+      runValidators: true,
+    }
   );
   return result;
 };
@@ -48,7 +49,7 @@ const deleteUserFromDB = async (userId: number | string) => {
   if (!userExists) {
     throw new Error("User not found");
   }
-  const result = User.findOneAndDelete({ userId });
+  const result = await User.findOneAndDelete({ userId });
   return result;
 };
 
@@ -67,7 +68,7 @@ const insertOrderToUserCollection = async (
     throw new Error("User not found");
   }
   const { productName, price, quantity } = orderData;
-  const result = User.findOneAndUpdate(
+  const result = await User.findOneAndUpdate(
     { userId, orders: { $exists: true } },
     { $push: { orders: { productName, price, quantity } } },
     { upsert: true, new: true }
@@ -81,7 +82,7 @@ const getAllOrderToUserCollection = async (userId: number | string) => {
   if (!userExists) {
     throw new Error("User not found ");
   }
-  const result = User.findOne({ userId }).select("orders");
+  const result = await User.findOne({ userId }).select("orders");
   return result;
 };
 
@@ -94,8 +95,8 @@ const calculateAllOrderToUserCollection = async (userId: number | string) => {
   const result = await User.findOne({ userId }).select("orders");
 
   const totalPrice = (result?.orders || []).reduce(
-    (total: number, order: { price?: number }) => {
-      return total + (order.price || 0);
+    (total: number, order: { price?: number; quantity: number }) => {
+      return total + (order.price || 0) * (order.quantity || 0);
     },
     0
   );

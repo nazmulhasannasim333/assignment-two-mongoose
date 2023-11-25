@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
@@ -49,8 +50,8 @@ const deleteUserFromDB = async (userId: number | string) => {
   if (!userExists) {
     throw new Error("User not found");
   }
-  const result = await User.findOneAndDelete({ userId });
-  return result;
+  await User.findOneAndDelete({ userId });
+  return null;
 };
 
 // Orders Related API's
@@ -68,12 +69,12 @@ const insertOrderToUserCollection = async (
     throw new Error("User not found");
   }
   const { productName, price, quantity } = orderData;
-  const result = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { userId, orders: { $exists: true } },
     { $push: { orders: { productName, price, quantity } } },
     { upsert: true, new: true }
   );
-  return result;
+  return null;
 };
 
 // get a user all orders

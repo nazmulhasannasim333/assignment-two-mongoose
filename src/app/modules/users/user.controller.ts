@@ -8,7 +8,7 @@ const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
     // zod validation data
-    const zodParseData = UserZodSchema.parse(userData);
+    const zodParseData = UserZodSchema.UserValidationSchema.parse(userData);
     const result = await UserServices.createUserToDB(zodParseData);
     res.status(200).json({
       success: true,
@@ -76,7 +76,12 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const userData = req.body;
-    const result = await UserServices.updateUserFromDB(userId, userData);
+    const zodParseDataForUpdate =
+      UserZodSchema.UserValidationSchema.parse(userData);
+    const result = await UserServices.updateUserFromDB(
+      userId,
+      zodParseDataForUpdate
+    );
     res.status(200).json({
       success: true,
       message: "User updated successfully!",
@@ -123,9 +128,10 @@ const insertOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const order = req.body;
+    const zodOrderParse = UserZodSchema.orderSchema.parse(order);
     const result = await UserServices.insertOrderToUserCollection(
       userId,
-      order
+      zodOrderParse
     );
     res.status(200).json({
       success: true,

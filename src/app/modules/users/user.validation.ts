@@ -1,4 +1,4 @@
-import { string, z } from "zod";
+import { z } from "zod";
 
 const UserValidationSchema = z.object({
   userId: z.number(),
@@ -14,8 +14,8 @@ const UserValidationSchema = z.object({
   hobbies: z.array(z.string()),
   address: z.object({
     street: z.string(),
-    city: string(),
-    country: string(),
+    city: z.string(),
+    country: z.string(),
   }),
   orders: z
     .array(
